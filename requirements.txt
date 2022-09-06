@@ -25,3 +25,4 @@ uvicorn==0.18.3
 Werkzeug==2.2.2
 zipp==3.8.1
 python-multipart
+six>=1.4.0 
