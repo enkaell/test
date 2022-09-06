@@ -43,24 +43,20 @@ def update_yandex_table():
             tag.remove(tag[1])
         except Exception:
             pass
-        try:
-            response = session.get(
-                f"https://www.sima-land.ru/api/v5/item/{tag.attrib['id']}",
-                headers={
-                    'accept': 'application/json',
-                    'X-Api-Key': token,
-                    'Authorization': token,
-                },
+        response = session.get(
+                    f"https://www.sima-land.ru/api/v5/item/{tag.attrib['id']}",
+                    headers={
+                        'accept': 'application/json',
+                        'X-Api-Key': token,
+                        'Authorization': token,
+                    },
 
-                params={
-                    'view': 'brief',
-                    'by_sid': 'false',
-                }
-            )
-        except Exception as e:
-            tree.write('t.xml', encoding='utf-8')
-            zf = zipfile.ZipFile("ostatki.zip", "w", compresslevel=8, compression=zipfile.ZIP_DEFLATED)
-            zf.write('t.xml', compresslevel=8)
+                    params={
+                        'view': 'brief',
+                        'by_sid': 'false',
+                    }
+                )
+        print(response.json()['sid'])
         if int(tag.find('count').text) < 10:
             tag.find('count').text = '0'
         else:
@@ -68,21 +64,12 @@ def update_yandex_table():
     tree.write('t.xml', encoding='utf-8')
     zf = zipfile.ZipFile("ostatki.zip", "w", compresslevel=8, compression=zipfile.ZIP_DEFLATED)
     zf.write('t.xml', compresslevel=8)
-    Date.date = str(datetime.datetime.now())
-    Date.info = "Ended"
 
 
 @app.get("/start")
 async def start(background_tasks: BackgroundTasks):
     background_tasks.add_task(update_yandex_table)
-    Date.date = str(datetime.datetime.now())
-    Date.info = "Started"
     return f"Started at {datetime.datetime.now()}"
-
-
-@app.get("/info")
-async def get_info():
-    return f"{Date.info} at {Date.date}"
 
 
 if __name__ == '__main__':
