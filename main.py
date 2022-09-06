@@ -34,7 +34,7 @@ def update_yandex_table():
     print('trying to get xml...')
     var_url = urlopen('https://give-ur-xml.herokuapp.com/')
     print('trying to parse xml...')
-    xmldoc = tree = etree.parse(var_url)
+    xmldoc = etree.parse(var_url)
     print('starting main loop...')
     for tag in xmldoc.iterfind('shop/offers/offer'):
         try:
