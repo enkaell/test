@@ -1,11 +1,8 @@
 import requests
-from requests.adapters import HTTPAdapter
-from urllib3.util.retry import Retry
 import zipfile
 from fastapi import FastAPI, BackgroundTasks, UploadFile
 from fastapi.responses import FileResponse
-from urllib.request import urlopen
-from lxml import etree
+from dataclasses import dataclass
 
 import datetime
 import shutil
@@ -13,6 +10,14 @@ import shutil
 path = 'ostatki.zip'
 app = FastAPI()
 Token = 123
+
+
+@dataclass
+class Info:
+    time: str
+
+
+info = Info('default')
 
 
 @app.get("/", response_class=FileResponse)
@@ -27,6 +32,12 @@ def upload(file: UploadFile):
             shutil.copyfileobj(file.file, f)
         zf = zipfile.ZipFile("ostatki.zip", "w", compresslevel=8, compression=zipfile.ZIP_DEFLATED)
         zf.write(file.filename, compresslevel=8)
+        info.time = datetime.datetime.now()
         return "File is uploaded"
     else:
         return "Wrong format"
+
+
+@app.get("/info")
+async def main():
+    return f"Updated at {info.time}"
