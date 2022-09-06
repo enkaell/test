@@ -1,13 +1,10 @@
 FROM python:3.9
 
-WORKDIR /code
+WORKDIR /usr/src/app
 
-COPY ./requirements.txt /code/requirements.txt
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
 
-RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
+COPY . .
 
-#
-COPY ./main.py /code/
-
-#
 CMD uvicorn --port 5000 --host 127.0.0.1 main:app --reload

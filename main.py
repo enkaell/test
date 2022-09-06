@@ -10,7 +10,7 @@ from dataclasses import dataclass
 import xml.etree.ElementTree as ET
 
 
-path = 'ostatki.zip'
+path = 't.xml'
 app = FastAPI()
 Token = 123
 
