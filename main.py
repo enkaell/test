@@ -1,6 +1,5 @@
-import requests
 import zipfile
-from fastapi import FastAPI, BackgroundTasks, UploadFile
+from fastapi import FastAPI, UploadFile
 from fastapi.responses import FileResponse
 from dataclasses import dataclass
 
