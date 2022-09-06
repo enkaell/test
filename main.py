@@ -1,4 +1,3 @@
-import zipfile
 from fastapi import FastAPI, UploadFile
 from fastapi.responses import FileResponse
 from dataclasses import dataclass
@@ -26,11 +25,9 @@ async def main():
 
 @app.post("/upload")
 def upload(file: UploadFile):
-    if ".xml" in file.filename:
+    if ".zip" in file.filename:
         with open(file.filename, 'wb') as f:
             shutil.copyfileobj(file.file, f)
-        zf = zipfile.ZipFile("ostatki.zip", "w", compresslevel=8, compression=zipfile.ZIP_DEFLATED)
-        zf.write(file.filename, compresslevel=8)
         info.time = datetime.datetime.now()
         return "File is uploaded"
     else:
