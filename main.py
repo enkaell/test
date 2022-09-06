@@ -5,7 +5,7 @@ import zipfile
 from fastapi import FastAPI, BackgroundTasks
 from fastapi.responses import FileResponse
 from urllib.request import urlopen
-from xml.etree.ElementTree import parse
+from lxml import etree
 
 import datetime
 import xml.etree.ElementTree as ET
@@ -22,18 +22,20 @@ async def main():
 
 
 def update_yandex_table():
+    print('started')
     json_data = {"password": "RAMTRX1500", "regulation": True, "email": "Rakhmanov-2019@list.ru"}
     response = requests.post('https://www.sima-land.ru/api/v5/signin', json=json_data)
     token = response.json().get('token')
-
+    print('token initialized')
     session = requests.Session()
     retry = Retry(connect=2, backoff_factor=0.5)
     adapter = HTTPAdapter(max_retries=retry)
     session.mount('https://', adapter)
-
+    print('trying to get xml...')
     var_url = urlopen('https://give-ur-xml.herokuapp.com/')
-    xmldoc = parse(var_url)
-
+    print('trying to parse xml...')
+    xmldoc = tree = etree.parse(var_url)
+    print('starting main loop...')
     for tag in xmldoc.iterfind('shop/offers/offer'):
         try:
             tag.remove(tag[1])
