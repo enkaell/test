@@ -6,7 +6,7 @@ anyio
 beautifulsoup4
 certifi
 charset-normalizer
-click	
+click
 fastapi
 gunicorn
 h11
@@ -25,6 +25,6 @@ soupsieve
 starlette
 typing-extensions
 urllib3
-uvicor
+uvicorn
 wheel
 zipp
