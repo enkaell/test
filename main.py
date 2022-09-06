@@ -10,12 +10,6 @@ from dataclasses import dataclass
 import xml.etree.ElementTree as ET
 
 
-@dataclass
-class Date:
-    date: str
-    info: str
-
-
 path = 'ostatki.zip'
 app = FastAPI()
 Token = 123
@@ -70,7 +64,3 @@ def update_yandex_table():
 async def start(background_tasks: BackgroundTasks):
     background_tasks.add_task(update_yandex_table)
     return f"Started at {datetime.datetime.now()}"
-
-
-if __name__ == '__main__':
-    uvicorn.run(app, host='127.0.0.1', port=8080)
