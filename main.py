@@ -5,7 +5,7 @@ from dataclasses import dataclass
 import datetime
 import shutil
 
-path = 'ostatki.zip'
+path = 't.xml'
 app = FastAPI()
 Token = 123
 
@@ -25,7 +25,7 @@ async def main():
 
 @app.post("/upload")
 def upload(file: UploadFile):
-    if ".zip" in file.filename:
+    if ".xml" in file.filename:
         with open(file.filename, 'wb') as f:
             shutil.copyfileobj(file.file, f)
         info.time = datetime.datetime.now()
