@@ -5,22 +5,21 @@ from dataclasses import dataclass
 import datetime
 import shutil
 
-path = 'ostatki.zip'
 app = FastAPI()
 Token = 123
 
 
 @dataclass
-class Info:
-    time: str
+class Path:
+    path: str
 
 
-info = Info('default')
+info = Path('ostatki.zip')
 
 
 @app.get("/", response_class=FileResponse)
 async def main():
-    return path
+    return Path.path
 
 
 @app.post("/upload")
@@ -28,8 +27,9 @@ def upload(file: UploadFile):
     if ".zip" in file.filename:
         with open(file.filename, 'wb') as f:
             shutil.copyfileobj(file.file, f)
+        Path.path = str(file.filename)
         info.time = datetime.datetime.now()
-        return "File is uploaded"
+        return f"File {Path.path} is uploaded"
     else:
         return "Wrong format"
 
