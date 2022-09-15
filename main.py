@@ -11,15 +11,14 @@ Token = 123
 
 @dataclass
 class Path:
-    path: str
+    path: str = 'ostatki.zip'
 
-
-info = Path('ostatki.zip')
+path = Path()
 
 
 @app.get("/", response_class=FileResponse)
 async def main():
-    return Path.path
+    return path.path
 
 
 @app.post("/upload")
@@ -27,13 +26,12 @@ def upload(file: UploadFile):
     if ".zip" in file.filename:
         with open(file.filename, 'wb') as f:
             shutil.copyfileobj(file.file, f)
-        Path.path = str(file.filename)
-        info.time = datetime.datetime.now()
-        return f"File {Path.path} is uploaded"
+        path.path = str(file.filename)
+        return f"File {path.path} is uploaded"
     else:
         return "Wrong format"
 
 
 @app.get("/info")
 async def main():
-    return f"Updated at {info.time}"
+    return f"Updated at {datetime.datetime.now()}"
