@@ -13,7 +13,7 @@ Token = 123
 
 @dataclass
 class Path:
-    path: str = 'ostatki.zip'
+    path: str = 'nothing'
     upload_url: str = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -22,7 +22,7 @@ path = Path()
 
 @app.get("/", response_class=FileResponse)
 async def main():
-    print('debug')
+    print('return')
     return path.path
 
 
