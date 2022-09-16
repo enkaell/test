@@ -13,7 +13,7 @@ Token = 123
 
 @dataclass
 class Path:
-    path: str = 'yandex.zip'
+    path: str = 'none'
     upload_url: str = os.path.dirname(os.path.abspath(__file__))
 
 
