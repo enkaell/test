@@ -2,7 +2,7 @@ import uvicorn
 from fastapi import FastAPI, UploadFile
 from fastapi.responses import FileResponse
 from dataclasses import dataclass
-
+import glob
 import datetime
 import shutil
 import os
@@ -42,8 +42,10 @@ def upload(file: UploadFile):
 
 @app.get("/info")
 async def info():
-    return f"Updated at {datetime.datetime.now()}"
+    from os import walk
 
+    filenames = next(walk(Path.upload_url), (None, None, []))[2]  # [] if no file
+    return f"filenames {filenames}"
 
 if __name__ == '__main__':
     uvicorn.run(app=app)
