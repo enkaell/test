@@ -1,41 +1,31 @@
 import uvicorn
 from fastapi import FastAPI, UploadFile
 from fastapi.responses import FileResponse
-from dataclasses import dataclass
-import glob
-import datetime
+import configparser
 import shutil
 import os
 
 app = FastAPI()
 Token = 123
 
-
-@dataclass
-class Path:
-    path: str = 'none'
-    upload_url: str = os.path.dirname(os.path.abspath(__file__))
-
-
-path = Path()
-
-
-@app.get("/", response_class=FileResponse)
-async def main():
-    print('return')
-    return path.path
+config = configparser.ConfigParser()
+config.read('conf.ini')
+PATH = config['APP']['path']
 
 
 @app.post("/upload")
 def upload(file: UploadFile):
     if ".zip" in file.filename:
+        upload_url = os.path.dirname(os.path.abspath(__file__))
         file_object = file.file
         # create empty file to copy the file_object to
-        upload_folder = open(os.path.join(Path.upload_url, file.filename), 'wb+')
+        upload_folder = open(os.path.join(upload_url, file.filename), 'wb+')
         shutil.copyfileobj(file_object, upload_folder)
         upload_folder.close()
-        path.path = file.filename
-        return f"File {path.path} is uploaded"
+        config['APP']['path'] = file.filename
+        with open('conf.ini', 'w') as configfile:  # save
+            config.write(configfile)
+        return f"File {config['APP']['path']} is uploaded"
     else:
         return "Wrong format"
 
@@ -44,8 +34,15 @@ def upload(file: UploadFile):
 async def info():
     from os import walk
 
-    filenames = next(walk(Path.upload_url), (None, None, []))[2]  # [] if no file
+    filenames = next(walk(os.path.dirname(os.path.abspath(__file__))), (None, None, []))[2]  # [] if no file
     return f"filenames {filenames}"
+
+
+@app.get("/", response_class=FileResponse)
+async def main():
+    print('debug')
+    return config['APP']['path']
+
 
 if __name__ == '__main__':
     uvicorn.run(app=app)
