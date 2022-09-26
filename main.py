@@ -15,8 +15,9 @@ PATH = config['APP']['path']
 
 @app.post("/upload")
 def upload(file: UploadFile):
+    upload_url = os.path.dirname(os.path.abspath(__file__))
+    os.remove(os.path.join(upload_url,config['APP']['path']))
     if ".zip" in file.filename:
-        upload_url = os.path.dirname(os.path.abspath(__file__))
         file_object = file.file
         # create empty file to copy the file_object to
         upload_folder = open(os.path.join(upload_url, file.filename), 'wb+')
@@ -41,7 +42,8 @@ async def info():
 @app.get("/", response_class=FileResponse)
 async def main():
     print('debug')
-    return config['APP']['path']
+    print(config['APP']['path'])
+    file = config['APP']['path']
 
 
 if __name__ == '__main__':
