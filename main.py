@@ -1,3 +1,5 @@
+import time
+
 import uvicorn
 from fastapi import FastAPI, UploadFile
 from fastapi.responses import FileResponse
@@ -15,8 +17,9 @@ PATH = config['APP']['path']
 
 @app.post("/upload")
 def upload(file: UploadFile):
+    time.sleep(4)
     upload_url = os.path.dirname(os.path.abspath(__file__))
-    os.remove(os.path.join(upload_url,config['APP']['path']))
+    os.remove(os.path.join(upload_url, config['APP']['path']))
     if ".zip" in file.filename:
         file_object = file.file
         # create empty file to copy the file_object to
@@ -42,6 +45,7 @@ async def info():
 @app.get("/file", response_class=FileResponse)
 async def main():
     print('debug')
+    time.sleep(2)
     print(config['APP']['path'])
     return FileResponse(path=config['APP']['path'], media_type='application/octet-stream', filename=config['APP']['path'])
 
