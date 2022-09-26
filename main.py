@@ -39,11 +39,11 @@ async def info():
     return f"filenames {filenames}"
 
 
-@app.get("/", response_class=FileResponse)
+@app.get("/file", response_class=FileResponse)
 async def main():
     print('debug')
     print(config['APP']['path'])
-    file = config['APP']['path']
+    return FileResponse(path=config['APP']['path'], media_type='application/octet-stream', filename=config['APP']['path'])
 
 
 if __name__ == '__main__':
