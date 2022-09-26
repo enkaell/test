@@ -17,10 +17,14 @@ PATH = config['APP']['path']
 
 @app.post("/upload")
 def upload(file: UploadFile):
+    config = configparser.ConfigParser()
+    config.read('conf.ini')
     time.sleep(4)
     upload_url = os.path.dirname(os.path.abspath(__file__))
     os.remove(os.path.join(upload_url, config['APP']['path']))
     if ".zip" in file.filename:
+        config['APP']['path'] = file.filename
+        config['APP']['path'] = file.filename
         file_object = file.file
         # create empty file to copy the file_object to
         upload_folder = open(os.path.join(upload_url, file.filename), 'wb+')
