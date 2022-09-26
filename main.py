@@ -17,14 +17,13 @@ PATH = config['APP']['path']
 
 @app.post("/upload")
 def upload(file: UploadFile):
-    config = configparser.ConfigParser()
-    config.read('conf.ini')
     time.sleep(4)
-    upload_url = os.path.dirname(os.path.abspath(__file__))
-    os.remove(os.path.join(upload_url, config['APP']['path']))
     if ".zip" in file.filename:
+        upload_url = os.path.dirname(os.path.abspath(__file__))
+        PATH = config['APP']['path']
+        os.remove(os.path.join(upload_url, PATH))
         config['APP']['path'] = file.filename
-        config['APP']['path'] = file.filename
+        PATH = file.filename
         file_object = file.file
         # create empty file to copy the file_object to
         upload_folder = open(os.path.join(upload_url, file.filename), 'wb+')
@@ -43,7 +42,7 @@ async def info():
     from os import walk
 
     filenames = next(walk(os.path.dirname(os.path.abspath(__file__))), (None, None, []))[2]  # [] if no file
-    return f"filenames {filenames}"
+    return f"filenames {filenames}, config: {config['APP']['path']}, PATH {PATH}"
 
 
 @app.get("/file", response_class=FileResponse)
@@ -51,7 +50,8 @@ async def main():
     print('debug')
     time.sleep(2)
     print(config['APP']['path'])
-    return FileResponse(path=config['APP']['path'], media_type='application/octet-stream', filename=config['APP']['path'])
+    print(PATH)
+    return config['APP']['path']
 
 
 if __name__ == '__main__':
