@@ -17,11 +17,13 @@ PATH = config['APP']['path']
 
 @app.post("/upload")
 def upload(file: UploadFile):
+    from os import walk
     time.sleep(4)
     if ".xml" in file.filename:
         upload_url = os.path.dirname(os.path.abspath(__file__))
         PATH = config['APP']['path']
-        os.remove(os.path.join(upload_url, PATH))
+        if config['APP']['path'] in next(walk(os.path.dirname(os.path.abspath(__file__))), (None, None, []))[2]:
+            os.remove(os.path.join(upload_url, PATH))
         config['APP']['path'] = file.filename
         PATH = file.filename
         file_object = file.file
